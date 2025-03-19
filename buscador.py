@@ -23,6 +23,10 @@ def buscar_restaurantes (api_key, location, radius=30000, tipo_estabelecimento='
     if resultados.get('status') != 'OK':
         print("Erro na requisição solicitada", resultados.get('status'))
         return
+#vou adicionar mais uma condição para mostrar caso o resultado seja não encontrado
+    if not resultados.get('results'):
+        print("Nenhum estabelecimento encontrado")
+        return
 
 #aqui vou iterar a lista de resultados, assim ele me processa cada item individualmente, e as informações que quero extrair
     for lugar in resultados.get('results', []):
