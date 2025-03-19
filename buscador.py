@@ -28,4 +28,4 @@ def buscar_restaurantes (api_key, location, radius=30000, tipo_estabelecimento='
     for lugar in resultados.get('results', []):
         nome = lugar.get('name')
         telefone = lugar.get('formatted_phone_number', 'Telefone não dispoível')
-        print(f"Nome: {nome}", Telefone: {telefone}")
+        print(f"Nome: {nome}, Telefone: {telefone}")
