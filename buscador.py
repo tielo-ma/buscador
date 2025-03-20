@@ -54,7 +54,7 @@ def buscar_restaurantes (api_key, location, radius=30000, tipo_estabelecimento='
 
 #aqui irei criar o bloco principal do script, aqui será definida a chave da api que por segurança não vou deixar aqui, e também esse bloco de código vai chamar a função <buscar_restaurantes>
 if __name__ == "__main__":
-    api_key = 'suave chave da api aqui'
+    api_key = 'sua chave da api aqui'
     location = '-5.812757,-35.255127' #aqui são as coordenadas geográficas de natal, copie a da sua cidade aqui
     buscar_restaurantes(api_key, location)
 
