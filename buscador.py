@@ -14,8 +14,7 @@ def buscar_restaurantes (api_key, location, radius=30000, tipo_estabelecimento='
         'key': api_key
     }
 
-#esqueci destas partes, onde o response é a variavel que vai ser responsavel por guardar a resposta da requisição a api, e 
-# o resultados seria pra converter essa resposta para json, visando melhor a visualização dos dados
+#aqui vai ser o bloco que será responsável por fazer a requisição http get á api e converter a resposta que vem em json para um dicionário em py
     response = requests.get(url, params=params)
     resultados = response.json()
 
@@ -28,8 +27,34 @@ def buscar_restaurantes (api_key, location, radius=30000, tipo_estabelecimento='
         print("Nenhum estabelecimento encontrado")
         return
 
-#aqui vou iterar a lista de resultados, assim ele me processa cada item individualmente, e as informações que quero extrair
+#mudei para fazer duas requisições pois em meus testes internos o código me voltou apenas o nome o restaurante, e todo os telefones como inexistente
     for lugar in resultados.get('results', []):
+        place_id = lugar.get('place_id')
         nome = lugar.get('name')
-        telefone = lugar.get('formatted_phone_number', 'Telefone não dispoível')
+
+#depois de algumas pesquisas, entendi que a versão antiga que estava codando ela tentava buscar as informações na primeira requisição
+#mas o campo formatted_phone_number não estava me voltando nada, para obter mais informações usarei o Place_details
+        url_details = "https://maps.googleapis.com/maps/api/place/details/json"
+        params_details = {
+            'place_id': place_id,
+            'fields': 'formatted_phone_number',
+            'key': api_key
+        }
+#aqui mais um campo para fazer a requisição e transformar a responsa que vem em json para um dicionário
+        response_details = requests.get(url_details, params=params_details)
+        resultados_details = response_details.json()
+
+#aqui irei adicionar um bloco para tratamentos de erros para a requisição esperada
+        if resultados_details.get('status') != 'OK':
+            telefone = 'Telefone não disponível'
+        else:
+            telefone = resultados_details.get('result', {}).get('formatted_phone_number','Telefone não disponível')
+
         print(f"Nome: {nome}, Telefone: {telefone}")
+
+#aqui irei criar o bloco principal do script, aqui será definida a chave da api que por segurança não vou deixar aqui, e também esse bloco de código vai chamar a função <buscar_restaurantes>
+if __name__ == "__main__":
+    api_key = 'AIzaSyCgfmqUpoVSqqLlwhzOM2NZtwe3ePKhF3Q'
+    location = '-5.812757,-35.255127' #aqui são as coordenadas geográficas de natal, copie a da sua cidade aqui
+    buscar_restaurantes(api_key, location)
+
